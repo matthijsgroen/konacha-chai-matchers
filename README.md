@@ -21,11 +21,11 @@ Usage
 
 Example:
 
-  #= require sinon
-  #= require chai-changes
-  #= require js-factories
-  #= require chai-backbone
-  #= require chai-jquery
+    #= require sinon
+    #= require chai-changes
+    #= require js-factories
+    #= require chai-backbone
+    #= require chai-jquery
 
 Contribution
 ------------
