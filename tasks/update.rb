@@ -22,7 +22,9 @@ def main_files folders
   folders.map do |f|
     file_search = f.downcase
     file_search << '.js' unless file_search =~ /\.js$/
-    path_order = ["./#{f}/#{file_search}", "./#{f}/lib/#{file_search}"]
+
+    path_order = ["./#{f}/pkg/#{file_search}", "./#{f}/#{file_search}", "./#{f}/lib/#{file_search}"]
+
     r = path_order.map do |p|
       p if File.exist? p
     end.flatten.compact.first
@@ -40,5 +42,6 @@ end
 def update_modules modules
   modules.each do |mod|
     `cd ./#{mod} && git pull`
+    `cd ./#{mod} && ./build` if File.exist? "./#{mod}/build"
   end
 end

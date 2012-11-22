@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Matthijs Groen"]
   s.email       = ["matthijs.groen@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Chai.js plugins collection for Konacha}
+  s.description = %q{A set of Chai.js libraries ready to use for Konacha}
 
   s.rubyforge_project = "konacha-chai-matchers"
 
@@ -17,4 +17,5 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+  s.license       = 'MIT'
 end

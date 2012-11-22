@@ -31,3 +31,6 @@
 [submodule "Sinon.JS"]
 	path = Sinon.JS
 	url = git://github.com/cjohansen/Sinon.JS.git
+[submodule "js-factories"]
+	path = js-factories
+	url = git://github.com/matthijsgroen/js-factories.git

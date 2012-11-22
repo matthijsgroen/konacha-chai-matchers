@@ -3,7 +3,9 @@ require "konacha-chai-matchers/version"
 module Konacha
   module Chai
     module Matchers
-      # Your code goes here...
+      class Engine < ::Rails::Engine
+
+      end
     end
   end
 end
