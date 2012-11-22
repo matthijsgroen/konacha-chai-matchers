@@ -28,3 +28,6 @@
 [submodule "chai-backbone"]
 	path = chai-backbone
 	url = https://github.com/matthijsgroen/chai-backbone.git
+[submodule "Sinon.JS"]
+	path = Sinon.JS
+	url = git://github.com/cjohansen/Sinon.JS.git
