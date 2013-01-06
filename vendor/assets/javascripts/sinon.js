@@ -1,5 +1,5 @@
 /**
- * Sinon.JS 1.5.0, 2012/11/22
+ * Sinon.JS 1.5.2, 2013/01/06
  *
  * @author Christian Johansen (christian@cjohansen.no)
  * @author Contributors: https://github.com/cjohansen/Sinon.JS/blob/master/AUTHORS
@@ -326,6 +326,13 @@ var sinon = (function (buster) {
             }
             var string = Object.prototype.toString.call(value);
             return string.substring(8, string.length - 1).toLowerCase();
+        },
+
+        createStubInstance: function (constructor) {
+            if (typeof constructor !== "function") {
+                throw new TypeError("The constructor should be a function.");
+            }
+            return sinon.stub(sinon.create(constructor.prototype));
         }
     };
 
@@ -949,7 +956,11 @@ var sinon = (function (buster) {
                 var calls = [];
 
                 for (var i = 0, l = spy.callCount; i < l; ++i) {
-                    push.call(calls, "    " + spy.getCall(i).toString());
+                    var stringifiedCall = "    " + spy.getCall(i).toString();
+                    if (/\n/.test(calls[i - 1])) {
+                        stringifiedCall = "\n" + stringifiedCall;
+                    }
+                    push.call(calls, stringifiedCall);
                 }
 
                 return calls.length > 0 ? "\n" + calls.join("\n") : "";
@@ -1346,12 +1357,23 @@ var sinon = (function (buster) {
                 return functionStub;
             },
 
-            reset: function () {
-                sinon.spy.reset.call(this);
+            resetBehavior: function () {
+                var i;
+
                 this.callArgAts = [];
                 this.callbackArguments = [];
                 this.callbackContexts = [];
                 this.callArgProps = [];
+
+                delete this.returnValue;
+                delete this.returnArgAt;
+                this.returnThis = false;
+
+                if (this.fakes) {
+                    for (i = 0; i < this.fakes.length; i++) {
+                        this.fakes[i].resetBehavior();
+                    }
+                }
             },
 
             returns: function returns(value) {
@@ -3057,6 +3079,15 @@ sinon.fakeServer = (function () {
         return false;
     }
 
+    function log(response, request) {
+        var str;
+
+        str =  "Request:\n"  + sinon.format(request)  + "\n\n";
+        str += "Response:\n" + sinon.format(response) + "\n\n";
+
+        sinon.log(str);
+    }
+
     return {
         create: function () {
             var server = create(this);
@@ -3163,6 +3194,8 @@ sinon.fakeServer = (function () {
                 }
 
                 if (request.readyState != 4) {
+                    log(response, request);
+
                     request.respond(response[0], response[1], response[2]);
                 }
             } catch (e) {
