@@ -22,7 +22,7 @@
     */
 
     chai.Assertion.addMethod('when', function(val, options) {
-      var action, definedActions, done, _i, _j, _len, _len1, _results,
+      var action, definedActions, done, result, _i, _j, _len, _len1, _results,
         _this = this;
       if (options == null) {
         options = {};
@@ -34,12 +34,13 @@
           action.before(this);
         }
       }
-      if (val.then != null) {
+      result = val();
+      if (result.then != null) {
         done = options != null ? options.notify : void 0;
         if (done == null) {
           done = function() {};
         }
-        return val.then(function() {
+        return result.then(function() {
           var _j, _len1;
           try {
             for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
@@ -50,13 +51,10 @@
             }
             return done();
           } catch (error) {
-            return done(error);
+            return done(new Error(error));
           }
         });
       } else {
-        if (typeof val === "function") {
-          val();
-        }
         _results = [];
         for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
           action = definedActions[_j];
