@@ -22,7 +22,7 @@
     */
 
     chai.Assertion.addMethod('when', function(val, options) {
-      var action, definedActions, done, object, promiseCallback, result, _i, _j, _len, _len1,
+      var action, definedActions, done, newPromise, object, promiseCallback, result, _i, _j, _len, _len1,
         _this = this;
       if (options == null) {
         options = {};
@@ -37,7 +37,6 @@
         }
       }
       result = val();
-      flag(this, 'object', result);
       if ((result != null ? result.then : void 0) != null) {
         done = options != null ? options.notify : void 0;
         if (done == null) {
@@ -58,7 +57,8 @@
             throw new Error(error);
           }
         };
-        result.then(promiseCallback, promiseCallback);
+        newPromise = result.then(promiseCallback, promiseCallback);
+        flag(this, 'object', newPromise);
       } else {
         for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
           action = definedActions[_j];
@@ -66,7 +66,9 @@
             action.after(this);
           }
         }
+        flag(this, 'object', result);
       }
+      flag(this, 'negate', false);
       return this;
     });
     noChangeAssert = function(context) {
