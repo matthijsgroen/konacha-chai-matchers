@@ -22,12 +22,14 @@
     */
 
     chai.Assertion.addMethod('when', function(val, options) {
-      var action, definedActions, done, result, _i, _j, _len, _len1, _results,
+      var action, definedActions, done, object, promiseCallback, result, _i, _j, _len, _len1,
         _this = this;
       if (options == null) {
         options = {};
       }
       definedActions = flag(this, 'whenActions') || [];
+      object = flag(this, 'object');
+      flag(this, 'whenObject', object);
       for (_i = 0, _len = definedActions.length; _i < _len; _i++) {
         action = definedActions[_i];
         if (typeof action.before === "function") {
@@ -35,12 +37,13 @@
         }
       }
       result = val();
-      if (result.then != null) {
+      flag(this, 'object', result);
+      if ((result != null ? result.then : void 0) != null) {
         done = options != null ? options.notify : void 0;
         if (done == null) {
           done = function() {};
         }
-        return result.then(function() {
+        promiseCallback = function() {
           var _j, _len1;
           try {
             for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
@@ -51,17 +54,20 @@
             }
             return done();
           } catch (error) {
-            return done(new Error(error));
+            done(new Error(error));
+            throw new Error(error);
           }
-        });
+        };
+        result.then(promiseCallback, promiseCallback);
       } else {
-        _results = [];
         for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
           action = definedActions[_j];
-          _results.push(typeof action.after === "function" ? action.after(this) : void 0);
+          if (typeof action.after === "function") {
+            action.after(this);
+          }
         }
-        return _results;
       }
+      return this;
     });
     noChangeAssert = function(context) {
       var endValue, negate, object, relevant, result, startValue;
@@ -71,7 +77,7 @@
       }
       negate = flag(context, 'negate');
       flag(context, 'negate', this.negate);
-      object = flag(context, 'object');
+      object = flag(context, 'whenObject');
       startValue = flag(context, 'changeStart');
       endValue = object();
       result = !utils.eql(endValue, startValue);
@@ -82,7 +88,7 @@
       var actualDelta, endValue, negate, object, startValue;
       negate = flag(context, 'negate');
       flag(context, 'negate', this.negate);
-      object = flag(context, 'object');
+      object = flag(context, 'whenObject');
       startValue = flag(context, 'changeStart');
       endValue = object();
       actualDelta = endValue - startValue;
@@ -93,7 +99,7 @@
       var negate, object, result, startValue;
       negate = flag(context, 'negate');
       flag(context, 'negate', this.negate);
-      object = flag(context, 'object');
+      object = flag(context, 'whenObject');
       startValue = object();
       result = !utils.eql(startValue, this.expectedEndValue);
       if (negate) {
@@ -106,7 +112,7 @@
       var endValue, negate, object, result;
       negate = flag(context, 'negate');
       flag(context, 'negate', this.negate);
-      object = flag(context, 'object');
+      object = flag(context, 'whenObject');
       endValue = object();
       result = utils.eql(endValue, this.expectedEndValue);
       context.assert(result, "expected `" + (formatFunction(object)) + "` to change to " + (utils.inspect(this.expectedEndValue)) + ", but it changed to " + (utils.inspect(endValue)), "expected `" + (formatFunction(object)) + "` not to change to " + (utils.inspect(this.expectedEndValue)) + ", but it did");
@@ -116,7 +122,7 @@
       var negate, object, result, startValue;
       negate = flag(context, 'negate');
       flag(context, 'negate', this.negate);
-      object = flag(context, 'object');
+      object = flag(context, 'whenObject');
       startValue = object();
       result = utils.eql(startValue, this.expectedStartValue);
       context.assert(result, "expected the change of `" + (formatFunction(object)) + "` to start from " + (utils.inspect(this.expectedStartValue)) + ", but it started from " + (utils.inspect(startValue)), "expected the change of `" + (formatFunction(object)) + "` not to start from " + (utils.inspect(this.expectedStartValue)) + ", but it did");
@@ -126,7 +132,7 @@
       var endValue, negate, object, result, startValue;
       negate = flag(context, 'negate');
       flag(context, 'negate', this.negate);
-      object = flag(context, 'object');
+      object = flag(context, 'whenObject');
       startValue = flag(context, 'changeStart');
       endValue = object();
       result = !utils.eql(startValue, endValue);
@@ -144,7 +150,7 @@
         negate: flag(this, 'negate'),
         before: function(context) {
           var startValue;
-          startValue = flag(context, 'object')();
+          startValue = flag(context, 'whenObject')();
           return flag(context, 'changeStart', startValue);
         },
         after: noChangeAssert
