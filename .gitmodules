@@ -34,3 +34,6 @@
 [submodule "js-factories"]
 	path = js-factories
 	url = git://github.com/matthijsgroen/js-factories.git
+[submodule "mocha-as-promised"]
+	path = mocha-as-promised
+	url = git://github.com/domenic/mocha-as-promised.git
