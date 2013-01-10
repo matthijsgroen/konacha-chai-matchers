@@ -22,7 +22,7 @@
     */
 
     chai.Assertion.addMethod('when', function(val, options) {
-      var action, definedActions, done, newPromise, object, promiseCallback, result, _i, _j, _len, _len1,
+      var action, definedActions, done, isPromise, newPromise, object, promiseCallback, result, _i, _j, _len, _len1,
         _this = this;
       if (options == null) {
         options = {};
@@ -37,7 +37,11 @@
         }
       }
       result = val();
-      if ((result != null ? result.then : void 0) != null) {
+      isPromise = (result != null ? result.then : void 0) != null;
+      if (((typeof DS !== "undefined" && DS !== null ? DS.Model : void 0) != null) && result instanceof DS.Model) {
+        isPromise = false;
+      }
+      if (isPromise) {
         done = options != null ? options.notify : void 0;
         if (done == null) {
           done = function() {};
