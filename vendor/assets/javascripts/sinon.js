@@ -1,5 +1,5 @@
 /**
- * Sinon.JS 1.5.2, 2013/01/09
+ * Sinon.JS 1.5.2, 2013/01/14
  *
  * @author Christian Johansen (christian@cjohansen.no)
  * @author Contributors: https://github.com/cjohansen/Sinon.JS/blob/master/AUTHORS

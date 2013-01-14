@@ -54,30 +54,33 @@
         };
     }
 
-    var fulfilledAsserter = function () {
-        var transformedPromise = this._obj.then(
+    function fulfilledAsserter() {
+        /*jshint validthis:true */
+        var assertion = this;
+
+        var transformedPromise = assertion._obj.then(
             function (value) {
-                if (utils.flag(this, "negate")) {
+                if (utils.flag(assertion, "negate")) {
                     // If we're negated, `this.assert`'s behavior is actually flipped, so `this.assert(true, ...)` will
                     // throw an error, as desired.
-                    this.assert(true, null, "expected promise to be rejected but it was fulfilled with " +
+                    assertion.assert(true, null, "expected promise to be rejected but it was fulfilled with " +
                                             utils.inspect(value));
                 }
 
                 return value;
-            }.bind(this),
+            },
             function (reason) {
                 // If we're in a negated state (i.e. `.not.fulfilled`) then this assertion will get flipped and thus
                 // pass, as desired.
-                this.assert(false, "expected promise to be fulfilled but it was rejected with " +
+                assertion.assert(false, "expected promise to be fulfilled but it was rejected with " +
                                    utils.inspect(reason));
-            }.bind(this)
+            }
         );
 
-        return makeAssertionPromise(transformedPromise, this);
-    };
+        return makeAssertionPromise(transformedPromise, assertion);
+    }
 
-    var rejectedAsserter = function () {
+    function rejectedAsserter() {
         // THIS SHIT IS COMPLICATED. Best illustrated by exhaustive example.
         ////////////////////////////////////////////////////////////////////
         // `fulfilledPromise.should.be.rejected`:
@@ -101,27 +104,29 @@
         //     `onOriginalFulfilled` → `this.assert(false, …)` does nothing → fulfills →
         //     `with(xxx)` called → `onTransformedFulfilled` → fulfills
 
+        /*jshint validthis:true */
+        var assertion = this;
         var rejectionReason = null;
 
-        var onOriginalFulfilled = function (value) {
-            this.assert(false, "expected promise to be rejected but it was fulfilled with " + utils.inspect(value));
-        }.bind(this);
+        function onOriginalFulfilled(value) {
+            assertion.assert(false, "expected promise to be rejected but it was fulfilled with " + utils.inspect(value));
+        }
 
-        var onOriginalRejected = function (reason) {
+        function onOriginalRejected(reason) {
             // Store the reason so that `with` can look at it later. Be sure to do this before asserting, since
             // throwing an error from the assert would cancel the process.
             rejectionReason = reason;
 
-            if (utils.flag(this, "negate")) {
-                this.assert(true, null, "expected promise to be fulfilled but it was rejected with " +
+            if (utils.flag(assertion, "negate")) {
+                assertion.assert(true, null, "expected promise to be fulfilled but it was rejected with " +
                                         utils.inspect(reason));
             }
 
             // If we didn't throw from the assert, transform rejections into fulfillments, by not re-throwing the
             // reason.
-        }.bind(this);
+        }
 
-        var withMethod = function (Constructor, message) {
+        function withMethod(Constructor, message) {
             var desiredReason = null;
 
             if (Constructor instanceof RegExp || typeof Constructor === "string") {
@@ -156,76 +161,80 @@
                 return rejectionReason === desiredReason;
             }
 
-            var onTransformedFulfilled = function () {
-                if (!utils.flag(this, "negate")) {
+            function onTransformedFulfilled() {
+                if (!utils.flag(assertion, "negate")) {
                     if (desiredReason) {
-                        this.assert(matchesDesiredReason(),
+                        assertion.assert(matchesDesiredReason(),
                                     null,
                                     "expected promise to be rejected with " + utils.inspect(desiredReason) + " but " +
                                     "it was rejected with " + utils.inspect(rejectionReason));
                     }
 
                     if (Constructor) {
-                        this.assert(constructorIsGood(),
+                        assertion.assert(constructorIsGood(),
                                     "expected promise to be rejected with " + Constructor.prototype.name + " but it " +
                                     "was rejected with " + utils.inspect(rejectionReason));
                     }
 
                     if (message) {
-                        this.assert(messageIsGood(),
+                        assertion.assert(messageIsGood(),
                                     "expected promise to be rejected with an error " + messageVerb + " " + message +
                                     " but got " + utils.inspect(rejectionReason.message));
                     }
                 }
-            }.bind(this);
+            }
 
-            var onTransformedRejected = function () {
-                if (utils.flag(this, "negate")) {
+            function onTransformedRejected() {
+                if (utils.flag(assertion, "negate")) {
                     if (desiredReason) {
-                        this.assert(matchesDesiredReason(),
+                        assertion.assert(matchesDesiredReason(),
                                     null,
                                     "expected promise to not be rejected with " + utils.inspect(desiredReason));
                     }
 
                     if (Constructor) {
-                        this.assert(constructorIsGood(),
+                        assertion.assert(constructorIsGood(),
                                     null,
                                     "expected promise to not be rejected with " + Constructor.prototype.name);
                     }
 
                     if (message) {
-                        this.assert(messageIsGood(),
+                        assertion.assert(messageIsGood(),
                                     null,
                                     "expected promise to be not be rejected with an error " + messageVerb + " " +
                                     message);
                     }
                 } else {
                     if (desiredReason) {
-                        this.assert(false,
+                        assertion.assert(false,
                                     "expected promise to be rejected with " + utils.inspect(desiredReason) +
                                     " but it was fulfilled");
                     }
 
                     if (Constructor) {
-                        this.assert(false, "expected promise to be rejected with " + Constructor.prototype.name +
+                        assertion.assert(false, "expected promise to be rejected with " + Constructor.prototype.name +
                                            " but it was fulfilled");
                     }
 
                     if (message) {
-                        this.assert(false, "expected promise to be rejected with an error " + messageVerb + " " +
+                        assertion.assert(false, "expected promise to be rejected with an error " + messageVerb + " " +
                                            message + " but it was fulfilled");
                     }
                 }
-            }.bind(this);
+            }
 
-            return makeAssertionPromise(transformedPromise.then(onTransformedFulfilled, onTransformedRejected), this);
-        }.bind(this);
+            return makeAssertionPromise(
+                transformedPromise.then(onTransformedFulfilled, onTransformedRejected),
+                assertion
+            );
+        }
 
-        var transformedPromise = makeAssertionPromise(this._obj.then(onOriginalFulfilled, onOriginalRejected), this);
+        var derivedPromise = assertion._obj.then(onOriginalFulfilled, onOriginalRejected);
+        var transformedPromise = makeAssertionPromise(derivedPromise, assertion);
         Object.defineProperty(transformedPromise, "with", { enumerable: true, configurable: true, value: withMethod });
 
         return transformedPromise;
-    };
+    }
 
     function isChaiAsPromisedAsserter(asserterName) {
         return ["fulfilled", "rejected", "broken", "eventually", "become"].indexOf(asserterName) !== -1;
@@ -363,7 +372,9 @@
         }
 
         var shouldBeRejectedPromise = (new Assertion(promise, message)).to.be.rejected;
-        return toTestAgainst ? shouldBeRejectedPromise.with(toTestAgainst) : shouldBeRejectedPromise;
+
+        // Use `['with']` to handle crappy non-ES5 environments like PhantomJS.
+        return toTestAgainst ? shouldBeRejectedPromise['with'](toTestAgainst) : shouldBeRejectedPromise;
     };
 
     assert.eventually = {};
