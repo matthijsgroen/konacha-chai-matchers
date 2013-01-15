@@ -37,3 +37,6 @@
 [submodule "mocha-as-promised"]
 	path = mocha-as-promised
 	url = git://github.com/domenic/mocha-as-promised.git
+[submodule "chai-things"]
+	path = chai-things
+	url = git://github.com/RubenVerborgh/Chai-Things.git
