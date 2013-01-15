@@ -4,7 +4,7 @@ require 'json'
 desc 'updates all submodules'
 task :update do
   modules = collect_modules
-  #update_modules modules
+  update_modules modules
   vendor_files modules
 end
 
