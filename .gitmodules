@@ -40,3 +40,6 @@
 [submodule "chai-things"]
 	path = chai-things
 	url = git://github.com/RubenVerborgh/Chai-Things.git
+[submodule "chai-fuzzy"]
+	path = chai-fuzzy
+	url = git://github.com/elliotf/chai-fuzzy.git
