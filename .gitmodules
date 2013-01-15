@@ -1,45 +1,48 @@
 [submodule "chai-spies"]
-	path = chai-spies
-	url = git://github.com/chaijs/chai-spies.git
+  path = chai-spies
+  url = git://github.com/chaijs/chai-spies.git
 [submodule "sinon-chai"]
-	path = sinon-chai
-	url = git://github.com/domenic/sinon-chai.git
+  path = sinon-chai
+  url = git://github.com/domenic/sinon-chai.git
 [submodule "chai-as-promised"]
-	path = chai-as-promised
-	url = git://github.com/domenic/chai-as-promised.git
+  path = chai-as-promised
+  url = git://github.com/domenic/chai-as-promised.git
 [submodule "chai-jquery"]
-	path = chai-jquery
-	url = git://github.com/chaijs/chai-jquery.git
+  path = chai-jquery
+  url = git://github.com/chaijs/chai-jquery.git
 [submodule "chai-timers"]
-	path = chai-timers
-	url = git://github.com/chaijs/chai-timers.git
+  path = chai-timers
+  url = git://github.com/chaijs/chai-timers.git
 [submodule "chai-stats"]
-	path = chai-stats
-	url = git://github.com/chaijs/chai-stats.git
+  path = chai-stats
+  url = git://github.com/chaijs/chai-stats.git
 [submodule "chai-null"]
-	path = chai-null
-	url = git://github.com/chaijs/chai-null.git
+  path = chai-null
+  url = git://github.com/chaijs/chai-null.git
 [submodule "chai-factories"]
-	path = chai-factories
-	url = git://github.com/chaijs/chai-factories.git
+  path = chai-factories
+  url = git://github.com/chaijs/chai-factories.git
 [submodule "chai-changes"]
-	path = chai-changes
-	url = https://github.com/matthijsgroen/chai-changes.git
+  path = chai-changes
+  url = https://github.com/matthijsgroen/chai-changes.git
 [submodule "chai-backbone"]
-	path = chai-backbone
-	url = https://github.com/matthijsgroen/chai-backbone.git
+  path = chai-backbone
+  url = https://github.com/matthijsgroen/chai-backbone.git
 [submodule "Sinon.JS"]
-	path = Sinon.JS
-	url = git://github.com/cjohansen/Sinon.JS.git
+  path = Sinon.JS
+  url = git://github.com/cjohansen/Sinon.JS.git
 [submodule "js-factories"]
-	path = js-factories
-	url = git://github.com/matthijsgroen/js-factories.git
+  path = js-factories
+  url = git://github.com/matthijsgroen/js-factories.git
 [submodule "mocha-as-promised"]
-	path = mocha-as-promised
-	url = git://github.com/domenic/mocha-as-promised.git
+  path = mocha-as-promised
+  url = git://github.com/domenic/mocha-as-promised.git
 [submodule "chai-things"]
-	path = chai-things
-	url = git://github.com/RubenVerborgh/Chai-Things.git
+  path = chai-things
+  url = git://github.com/RubenVerborgh/Chai-Things.git
 [submodule "chai-fuzzy"]
-	path = chai-fuzzy
-	url = git://github.com/elliotf/chai-fuzzy.git
+  path = chai-fuzzy
+  url = git://github.com/elliotf/chai-fuzzy.git
+[submodule "sinon"]
+	path = sinon
+	url = git://github.com/cjohansen/Sinon.JS.git
