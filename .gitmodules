@@ -28,9 +28,6 @@
 [submodule "chai-backbone"]
   path = chai-backbone
   url = https://github.com/matthijsgroen/chai-backbone.git
-[submodule "Sinon.JS"]
-  path = Sinon.JS
-  url = git://github.com/cjohansen/Sinon.JS.git
 [submodule "js-factories"]
   path = js-factories
   url = git://github.com/matthijsgroen/js-factories.git
@@ -44,5 +41,5 @@
   path = chai-fuzzy
   url = git://github.com/elliotf/chai-fuzzy.git
 [submodule "sinon"]
-	path = sinon
-	url = git://github.com/cjohansen/Sinon.JS.git
+  path = sinon
+  url = git://github.com/cjohansen/Sinon.JS.git
