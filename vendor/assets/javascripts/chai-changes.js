@@ -37,7 +37,7 @@
         }
       }
       result = val();
-      isPromise = (result != null ? result.then : void 0) != null;
+      isPromise = typeof result.then === 'function';
       if (((typeof DS !== "undefined" && DS !== null ? DS.Model : void 0) != null) && result instanceof DS.Model) {
         isPromise = false;
       }
@@ -63,6 +63,7 @@
         };
         newPromise = result.then(promiseCallback, promiseCallback);
         flag(this, 'object', newPromise);
+        this.then = newPromise.then;
       } else {
         for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
           action = definedActions[_j];
