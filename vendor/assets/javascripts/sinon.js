@@ -1,5 +1,5 @@
 /**
- * Sinon.JS 1.5.2, 2013/01/20
+ * Sinon.JS 1.5.2, 2013/01/15
  *
  * @author Christian Johansen (christian@cjohansen.no)
  * @author Contributors: https://github.com/cjohansen/Sinon.JS/blob/master/AUTHORS
@@ -1910,8 +1910,7 @@ var sinon = (function (buster) {
                 }
 
                 var callStr = sinon.spyCall.toString.call({
-                    proxy: this.method || "anonymous mock expectation",
-                    args: args
+                    proxy: this.method, args: args
                 });
 
                 var message = callStr.replace(", [...", "[, ...") + " " +
@@ -2265,8 +2264,6 @@ if (typeof sinon == "undefined") {
             if (firstException) {
               throw firstException;
             }
-
-            return this.now;
         },
 
         firstTimerInRange: function (from, to) {
