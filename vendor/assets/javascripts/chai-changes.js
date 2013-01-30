@@ -62,10 +62,7 @@
           }
         };
         newPromise = result.then(promiseCallback, promiseCallback);
-        if (newPromise != null ? newPromise.then : void 0) {
-          this.then = newPromise.then;
-        }
-        flag(this, 'object', newPromise);
+        return newPromise;
       } else {
         for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
           action = definedActions[_j];
