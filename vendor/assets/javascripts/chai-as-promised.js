@@ -1,4 +1,4 @@
-﻿(function (chaiAsPromised) {
+(function (chaiAsPromised) {
     "use strict";
 
     // Module systems magic dance.
@@ -149,7 +149,7 @@
             } else {
                 messageVerb = "including";
                 messageIsGood = function () {
-                    return rejectionReason.message.indexOf(message) !== -1;
+                    return rejectionReason && rejectionReason.message.indexOf(message) !== -1;
                 };
             }
 
@@ -179,7 +179,7 @@
                     if (message) {
                         assertion.assert(messageIsGood(),
                                     "expected promise to be rejected with an error " + messageVerb + " " + message +
-                                    " but got " + utils.inspect(rejectionReason.message));
+                                    " but got " + utils.inspect(rejectionReason && rejectionReason.message));
                     }
                 }
             }
@@ -267,11 +267,13 @@
             return Assertion.prototype.assert.apply(assertionPromise, arguments);
         };
 
+        Object.defineProperty(assertionPromise, "_obj", Object.getOwnPropertyDescriptor(Assertion.prototype, "_obj"));
+
         // 3. Chai asserters, which act upon the promise's fulfillment value.
         var asserterNames = Object.getOwnPropertyNames(Assertion.prototype);
         asserterNames.forEach(function (asserterName) {
             // We already added `notify` and `assert`; don't mess with those.
-            if (asserterName === "notify" || asserterName === "assert") {
+            if (asserterName === "notify" || asserterName === "assert" || asserterName === "_obj") {
                 return;
             }
 

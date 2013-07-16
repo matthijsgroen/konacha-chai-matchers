@@ -43,3 +43,6 @@
 [submodule "sinon"]
   path = sinon
   url = git://github.com/cjohansen/Sinon.JS.git
+[submodule "memo-is"]
+	path = memo-is
+	url = https://github.com/d11wtq/node-memo-is.git

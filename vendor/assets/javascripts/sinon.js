@@ -1,12 +1,12 @@
 /**
- * Sinon.JS 1.6.0, 2013/02/26
+ * Sinon.JS 1.5.2, 2013/02/08
  *
  * @author Christian Johansen (christian@cjohansen.no)
  * @author Contributors: https://github.com/cjohansen/Sinon.JS/blob/master/AUTHORS
  *
  * (The BSD License)
  * 
- * Copyright (c) 2010-2013, Christian Johansen, christian@cjohansen.no
+ * Copyright (c) 2010-2012, Christian Johansen, christian@cjohansen.no
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification,
@@ -41,7 +41,7 @@
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 var sinon = (function (buster) {
@@ -284,7 +284,7 @@ var sinon = (function (buster) {
 
         calledInOrder: function (spies) {
             for (var i = 1, l = spies.length; i < l; i++) {
-                if (!spies[i - 1].calledBefore(spies[i]) || !spies[i].called) {
+                if (!spies[i - 1].calledBefore(spies[i])) {
                     return false;
                 }
             }
@@ -627,7 +627,7 @@ var sinon = (function (buster) {
   * @author Christian Johansen (christian@cjohansen.no)
   * @license BSD
   *
-  * Copyright (c) 2010-2013 Christian Johansen
+  * Copyright (c) 2010-2011 Christian Johansen
   */
 
 (function (sinon) {
@@ -1195,7 +1195,7 @@ var sinon = (function (buster) {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 (function (sinon) {
@@ -1566,7 +1566,7 @@ var sinon = (function (buster) {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 (function (sinon) {
@@ -1991,7 +1991,7 @@ var sinon = (function (buster) {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 (function (sinon) {
@@ -2148,7 +2148,7 @@ var sinon = (function (buster) {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 if (typeof sinon == "undefined") {
@@ -2568,7 +2568,7 @@ if (typeof sinon == "undefined") {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 if (typeof sinon == "undefined") {
@@ -3044,7 +3044,7 @@ if (typeof module == "object" && typeof require == "function") {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 if (typeof sinon == "undefined") {
@@ -3260,7 +3260,7 @@ if (typeof module == "object" && typeof require == "function") {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 (function () {
@@ -3340,7 +3340,7 @@ if (typeof module == "object" && typeof require == "function") {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 if (typeof module == "object" && typeof require == "function") {
@@ -3464,7 +3464,7 @@ if (typeof module == "object" && typeof require == "function") {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 (function (sinon) {
@@ -3537,7 +3537,7 @@ if (typeof module == "object" && typeof require == "function") {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 (function (sinon) {
@@ -3634,7 +3634,7 @@ if (typeof module == "object" && typeof require == "function") {
  * @author Christian Johansen (christian@cjohansen.no)
  * @license BSD
  *
- * Copyright (c) 2010-2013 Christian Johansen
+ * Copyright (c) 2010-2011 Christian Johansen
  */
 
 (function (sinon, global) {
@@ -3727,14 +3727,7 @@ if (typeof module == "object" && typeof require == "function") {
             if (!sinon.calledInOrder(arguments)) {
                 try {
                     expected = [].join.call(arguments, ", ");
-                    var calls = slice.call(arguments);
-                    var i = calls.length;
-                    while (i) {
-                        if (!calls[--i].called) {
-                            calls.splice(i, 1);
-                        }
-                    }
-                    actual = sinon.orderByFirstCall(calls).join(", ");
+                    actual = sinon.orderByFirstCall(slice.call(arguments)).join(", ");
                 } catch (e) {
                     // If this fails, we'll just fall back to the blank string
                 }
