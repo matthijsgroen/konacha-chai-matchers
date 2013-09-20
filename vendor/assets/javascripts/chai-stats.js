@@ -105,6 +105,58 @@ exports.sdeviation = function (nums) {
   return Math.sqrt(davg);
 };
 
+function tolerance(precision){
+  if(precision == null) precision = 7;
+  return 0.5 * Math.pow(10, -precision);
+}
+
+/**
+ *
+ * # almostEqual
+ *
+ * Returns true if the two arguments are equal within the given precision.
+ *
+ * @param {Number} a
+ * @param {Number} b
+ * @param {Number} precision. Optional: defaults to 7.
+ * @return {Boolean} true if the two arguments are equal with precision decimal places.
+ *
+ */
+
+exports.almostEqual = function (a,b,precision){
+  return Math.abs(a - b) < tolerance(precision);
+};
+
+/**
+ *
+ * # deepAlmostEqual
+ *
+ * Returns true if all the objects are deeply equal, within the given precision.
+ *
+ * @param {Object} a
+ * @param {Object} b
+ * @param {Number} precision. Optional: defaults to 7.
+ * @return {Boolean} true if the two arguments are deeply equal with precision decimal places.
+ */
+
+exports.deepAlmostEqual = function(a,b,precision){
+  var tol = tolerance(precision);
+  function deepEql (act, exp) {
+    if (Object(act) === act){
+      for (var k in act) {
+        if (!(deepEql(act[k], exp[k]))) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return Math.abs(act - exp) < tol;
+    }
+  }
+
+  return deepEql(a,b);
+};
+
 }); // module calc
 
 
@@ -139,10 +191,10 @@ module.exports = function (chai, _) {
   Assertion.overwriteMethod('equal', function(_super) {
     return function equal (exp, precision) {
       if (flag(this, 'almost')) {
-        var act = flag(this, 'object')
-        if (null == precision) precision = 7;
+        var act = flag(this, 'object');
+        if(precision == null) precision = 7;
         this.assert(
-            Math.abs(act - exp) < 0.5 * Math.pow(10, -precision)
+            calc.almostEqual(exp,act,precision)
           , "expected #{this} to equal #{exp} up to " + _.inspect(precision) + " decimal places"
           , "expected #{this} to not equal #{exp} up to " + _.inspect(precision) + " decimal places"
           , exp
@@ -177,25 +229,10 @@ module.exports = function (chai, _) {
   Assertion.overwriteMethod('eql', function (_super) {
     return function eql (exp, precision) {
       if (flag(this, 'almost')) {
-        if (null == precision) precision = 7;
-        var act = flag(this, 'object')
-          , tol = 0.5 * Math.pow(10, -precision);
-
-        function deepEql (act, exp) {
-          if (Object(act) === act){
-            for (var k in act) {
-              if (!(deepEql(act[k], exp[k]))) {
-                return false;
-              }
-            }
-            return true;
-          } else {
-            return Math.abs(act - exp) < tol;
-          }
-        };
-
+        var act = flag(this, 'object') ;
+        if(precision == null) precision = 7;
         this.assert(
-            deepEql(act, exp)
+            calc.deepAlmostEqual(act,exp,precision)
           , "expected #{this} to equal #{exp} up to " + _.inspect(precision) + ' decimal places'
           , "expected #{this} to not equal #{exp} up to " + _.inspect(precision) + ' decimal places'
           , exp
@@ -279,6 +316,11 @@ module.exports = function (chai, _) {
   Assertion.addProperty('deviation', deviation);
 };
 
+for(var i in calc){
+  if(calc.hasOwnProperty(i)){
+    module.exports[i] = calc[i];
+  }
+}
 }); // module stats
   return require('stats');
 });
