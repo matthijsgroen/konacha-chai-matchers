@@ -42,6 +42,10 @@ module Konacha
         private
 
         def determine_file_from_suggestion filename
+          unless filename
+            puts "unable to determine main filename for #@name"
+            return
+          end
           file_search = filename.downcase
           file_search << '.js' unless file_search =~ /\.js$/
 

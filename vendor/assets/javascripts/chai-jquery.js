@@ -21,6 +21,26 @@
       flag = utils.flag;
   $ = $ || jQuery;
 
+  var setPrototypeOf = '__proto__' in Object ?
+    function (object, prototype) {
+      object.__proto__ = prototype;
+    } :
+    function (object, prototype) {
+      var excludeNames = /^(?:length|name|arguments|caller)$/;
+
+      function copyProperties(dst, src) {
+        Object.getOwnPropertyNames(src).forEach(function (name) {
+          if (!excludeNames.test(name)) {
+            Object.defineProperty(dst, name,
+              Object.getOwnPropertyDescriptor(src, name));
+          }
+        });
+      }
+
+      copyProperties(object, prototype);
+      copyProperties(object, Object.getPrototypeOf(prototype));
+    };
+
   $.fn.inspect = function (depth) {
     var el = $('<div />').append(this.clone());
     if (depth !== undefined) {
@@ -171,7 +191,7 @@
           _super.apply(this, arguments);
         }
       };
-      be.__proto__ = this;
+      setPrototypeOf(be, this);
       return be;
     }
   });
@@ -208,7 +228,7 @@
           Function.prototype.apply.call(_super.call(this), this, arguments);
         }
       };
-      contain.__proto__ = this;
+      setPrototypeOf(contain, this);
       return contain;
     }
   });
@@ -227,7 +247,7 @@
             , selector
           );
         };
-        have.__proto__ = this;
+        setPrototypeOf(have, this);
         return have;
       } else {
         _super.call(this);
