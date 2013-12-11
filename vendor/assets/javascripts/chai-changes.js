@@ -53,7 +53,7 @@
           }
         };
         newPromise = result.then(promiseCallback, promiseCallback);
-        return newPromise;
+        this.then = newPromise.then.bind(newPromise);
       } else {
         for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
           action = definedActions[_j];
