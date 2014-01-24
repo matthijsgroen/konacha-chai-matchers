@@ -52,7 +52,7 @@
     return el.html();
   };
 
-  var props = {attr: 'attribute', css: 'CSS property'};
+  var props = {attr: 'attribute', css: 'CSS property', prop: 'property'};
   for (var prop in props) {
     (function (prop, description) {
       chai.Assertion.addMethod(prop, function (name, val) {
@@ -139,7 +139,7 @@
     );
   });
 
-  $.each(['visible', 'hidden', 'selected', 'checked', 'disabled'], function (i, attr) {
+  $.each(['visible', 'hidden', 'selected', 'checked', 'enabled', 'disabled'], function (i, attr) {
     chai.Assertion.addProperty(attr, function () {
       this.assert(
           flag(this, 'object').is(':' + attr)
