@@ -4,15 +4,25 @@ module Konacha
     module Matchers
       class Library
 
-        attr_reader :name
+        attr_reader :data, :name
 
-        def initialize(name)
-          @name = name
+        def initialize(data)
+          @data = data
+          @name = data[:name]
+        end
+
+        def to_s
+          "#{@data[:name]} => #{@data[:tag]}"
+        end
+
+        def latest_version
+          `cd ./#@name && git fetch`
+          @data[:tag]
         end
 
         def update
-          `cd ./#@name && git pull origin master`
-          `cd ./#@name && ./build` if File.exist? "./#@name/build"
+          puts "Updating #{@data[:name]} to #{latest_version}"
+          `cd ./#{@data[:name]} && git checkout #{@data[:commit]}`
         end
 
         def vendor

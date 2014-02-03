@@ -1,18 +1,20 @@
 (function (mochaAsPromised) {
     "use strict";
 
-    function findNodeJSMocha(moduleToTest, suffix) {
+    function findNodeJSMocha(moduleToTest, suffix, accumulator) {
+        if (accumulator === undefined) {
+            accumulator = [];
+        }
+
         if (moduleToTest.id.indexOf(suffix, moduleToTest.id.length - suffix.length) !== -1 && moduleToTest.exports) {
-            return moduleToTest.exports;
+            accumulator.push(moduleToTest.exports);
         }
 
-        for (var i = 0; i < moduleToTest.children.length; ++i) {
-            var found = findNodeJSMocha(moduleToTest.children[i], suffix);
+        moduleToTest.children.forEach(function (child) {
+            findNodeJSMocha(child, suffix, accumulator);
+        });
 
-            if (found) {
-                return found;
-            }
-        }
+        return accumulator;
     }
 
     // Module systems magic dance.
@@ -22,31 +24,32 @@
         // using the Mocha test runner from either a locally-installed package, or from a globally-installed one.
         // In the latter case, naively plugging in `require("mocha")` would end up duck-punching the wrong instance,
         // so we provide this shortcut to auto-detect which Mocha package needs to be duck-punched.
-        module.exports = function (mocha) {
-            if (!mocha) {
+        module.exports = function (mochaModules) {
+            if (mochaModules === undefined) {
                 if (typeof process === "object" && Object.prototype.toString.call(process) === "[object process]") {
                     // We're in *real* Node.js, not in a browserify-like environment. Do automatic detection logic.
 
-                    // Funky syntax prevents Browserify from detecting the require, since it's needed for Node.js-only stuff.
+                    // Funky syntax prevents Browserify from detecting the require, since it's needed for Node.js-only
+                    // stuff.
                     var path = (require)("path");
                     var suffix = path.join("mocha", "lib", "mocha.js");
-                    mocha = findNodeJSMocha(require.main, suffix);
+                    mochaModules = findNodeJSMocha(require.main, suffix);
 
-                    if (mocha === undefined) {
+                    if (mochaModules === undefined) {
                         throw new Error("Attempted to automatically plug in to Mocha, but could not detect a " +
                                         "running Mocha module.");
                     }
 
                 } else if (typeof Mocha !== "undefined") {
                     // We're in a browserify-like emulation environment. Try the `Mocha` global.
-                    mocha = Mocha;
+                    mochaModules = [Mocha];
                 } else {
                     throw new Error("Attempted to automatically plug in to Mocha, but could not detect the " +
                                     "environment. Plug in manually by passing the running Mocha module.");
                 }
             }
 
-            mochaAsPromised(mocha);
+            mochaModules.forEach(mochaAsPromised);
         };
     } else if (typeof define === "function" && define.amd) {
         // AMD
@@ -69,13 +72,11 @@
         }
     }
 
-    var duckPunchedAlready = false;
-
     return function mochaAsPromised(mocha) {
-        if (duckPunchedAlready) {
+        if (mocha._mochaAsPromisedLoadedAlready) {
             return;
         }
-        duckPunchedAlready = true;
+        mocha._mochaAsPromisedLoadedAlready = true;
 
         // Soooo this is an awesome hack.
 

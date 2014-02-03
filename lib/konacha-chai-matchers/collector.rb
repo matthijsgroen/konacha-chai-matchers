@@ -1,10 +1,14 @@
+require 'yaml'
 
 module Konacha
   module Chai
     module Matchers
       class Collector
 
+
         def update_libraries
+          `git submodule init`
+          `git submodule update`
           modules = collect_libraries
 
           modules.each(&:update)
@@ -18,20 +22,22 @@ module Konacha
         end
 
         private
-
         def collect_libraries
-          libs = []
-          File.open('.gitmodules') do |f|
-            contents = f.read
-            contents.each_line do |line|
-              if matches = /\[submodule "(.*)"\]/.match(line)
-                libs << Library.new(matches[1])
-              end
-            end
-          end
-          libs
-        end
+          locked_versions = YAML.load_file 'VERSIONS.lock'
 
+          urls = `cat .gitmodules | grep 'url =' | awk '{print $3}'`.split("\n")
+          paths = `cat .gitmodules | grep 'path =' | awk '{print $3}'`.split("\n")
+          @libs ||= urls.each_with_index.map do |url, i|
+            name = paths[i]
+            `cd ./#{name} && git fetch && cd ..`
+            latest_tag = `cd ./#{name} && git describe --tags --abbrev=0 && cd ..`.split.first
+            library_tag = locked_versions[name] || latest_tag
+
+            latest_commit = `cd ./#{name} && git rev-parse #{library_tag || 'HEAD'} && cd ..`.split.first
+
+            Library.new url: url, name: name, tag: library_tag, commit: latest_commit
+          end
+        end
       end
     end
   end

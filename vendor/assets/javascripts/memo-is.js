@@ -108,7 +108,7 @@ var Memoizer = function() {
   memoizer.is = this.is;
 };
 
-if (typeof(module) != 'undefined' && module.exports) { // Node.js
+if (module && module.exports) { // Node.js
   /**
    * Return a new Memoizer object.
    *
