@@ -9,6 +9,7 @@ module Konacha
         def initialize(data)
           @data = data
           @name = data[:name]
+          @commit = data[:commit]
         end
 
         def to_s
@@ -21,8 +22,11 @@ module Konacha
         end
 
         def update
-          puts "Updating #{@data[:name]} to #{latest_version}"
-          `cd ./#{@data[:name]} && git checkout #{@data[:commit]}`
+          puts "Updating #@name to #{latest_version}"
+          `cd ./#@name && git checkout #@commit`
+          if File.exist? "./#@name/build"
+            system("cd ./#@name && bundle exec ./build") or raise "Building #@name failed"
+          end
         end
 
         def vendor
