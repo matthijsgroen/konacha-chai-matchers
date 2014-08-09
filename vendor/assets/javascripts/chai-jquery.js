@@ -113,29 +113,35 @@
   });
 
   chai.Assertion.addMethod('html', function (html) {
+    var actual = flag(this, 'object').html();
     this.assert(
-        flag(this, 'object').html() === html
-      , 'expected #{this} to have HTML #{exp}'
+        actual === html
+      , 'expected #{this} to have HTML #{exp}, but the HTML was #{act}'
       , 'expected #{this} not to have HTML #{exp}'
       , html
+      , actual
     );
   });
 
   chai.Assertion.addMethod('text', function (text) {
+    var actual = flag(this, 'object').text();
     this.assert(
-        flag(this, 'object').text() === text
-      , 'expected #{this} to have text #{exp}'
+        actual === text
+      , 'expected #{this} to have text #{exp}, but the text was #{act}'
       , 'expected #{this} not to have text #{exp}'
       , text
+      , actual
     );
   });
 
   chai.Assertion.addMethod('value', function (value) {
+    var actual = flag(this, 'object').val();
     this.assert(
         flag(this, 'object').val() === value
-      , 'expected #{this} to have value #{exp}'
+      , 'expected #{this} to have value #{exp}, but the value was #{act}'
       , 'expected #{this} not to have value #{exp}'
       , value
+      , actual
     );
   });
 
@@ -178,21 +184,22 @@
 
   chai.Assertion.overwriteProperty('be', function (_super) {
     return function () {
-      var be = function (selector) {
-        var obj = flag(this, 'object');
-        if (obj instanceof $) {
+      var obj = flag(this, 'object');
+      if (obj instanceof $) {
+        var be = function (selector) {
           this.assert(
               obj.is(selector)
             , 'expected #{this} to be #{exp}'
             , 'expected #{this} not to be #{exp}'
             , selector
           );
-        } else {
-          _super.apply(this, arguments);
-        }
-      };
-      setPrototypeOf(be, this);
-      return be;
+        };
+        setPrototypeOf(be, this);
+        return be;
+      }
+      else {
+        _super.call(this);
+      }
     }
   });
 
