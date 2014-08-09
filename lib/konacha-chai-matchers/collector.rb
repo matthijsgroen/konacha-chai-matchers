@@ -30,10 +30,14 @@ module Konacha
           @libs ||= urls.each_with_index.map do |url, i|
             name = paths[i]
             `cd ./#{name} && git fetch && cd ..`
+            `cd ./#{name} && git fetch --tags && cd ..`
             latest_tag = `cd ./#{name} && git describe --tags --abbrev=0 && cd ..`.split.first
-            library_tag = locked_versions[name] || latest_tag
+            library_tag = latest_tag
+            library_tag = locked_versions[name] if locked_versions.key? name
 
             latest_commit = `cd ./#{name} && git rev-parse #{library_tag || 'HEAD'} && cd ..`.split.first
+
+            $stdout.puts "*** #{name} tag: #{latest_tag.inspect}, using: #{library_tag.inspect} commit: #{latest_commit}"
 
             Library.new url: url, name: name, tag: library_tag, commit: latest_commit
           end
