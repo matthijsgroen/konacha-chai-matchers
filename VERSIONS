@@ -1,7 +1,7 @@
 chai-spies: 0.5.1
 sinon-chai: 2.5.0
 chai-as-promised: 4.1.0
-chai-jquery: 1.2.3
+chai-jquery: 1.1.1
 chai-timers: 0.2.0
 chai-stats: 0.3.0
 chai-null: 0.1.0
