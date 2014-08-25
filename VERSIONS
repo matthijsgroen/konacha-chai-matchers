@@ -12,5 +12,5 @@ js-factories: 1.0.1
 mocha-as-promised: 2.0.0
 chai-things: 0.2.0
 chai-fuzzy: 1.4.0
-sinon: 1.7.3
+sinon: 1.10.3
 memo-is: 0.0.2
