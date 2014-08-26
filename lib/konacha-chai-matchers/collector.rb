@@ -29,7 +29,6 @@ module Konacha
           paths = `cat .gitmodules | grep 'path =' | awk '{print $3}'`.split("\n")
           @libs ||= urls.each_with_index.map do |url, i|
             name = paths[i]
-            $stdout.puts "** #{name} **"
             `cd ./#{name} && git fetch && cd ..`
             `cd ./#{name} && git fetch --tags && cd ..`
             tags = `cd ./#{name} && git tag && cd ..`.split

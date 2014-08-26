@@ -46,3 +46,18 @@
 [submodule "memo-is"]
 	path = memo-is
 	url = https://github.com/d11wtq/node-memo-is.git
+[submodule "chai-jq"]
+	path = chai-jq
+	url = https://github.com/FormidableLabs/chai-jq.git
+[submodule "chai-js-factories"]
+	path = chai-js-factories
+	url = https://github.com/solatis/chai-js-factories.git
+[submodule "chai-json-schema"]
+	path = chai-json-schema
+	url = https://github.com/Bartvds/chai-json-schema.git
+[submodule "chai-datetime"]
+	path = chai-datetime
+	url = https://github.com/gaslight/chai-datetime.git
+[submodule "chai-change"]
+	path = chai-change
+	url = https://github.com/timruffles/chai-change.git
