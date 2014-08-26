@@ -29,12 +29,23 @@ module Konacha
           paths = `cat .gitmodules | grep 'path =' | awk '{print $3}'`.split("\n")
           @libs ||= urls.each_with_index.map do |url, i|
             name = paths[i]
+            $stdout.puts "** #{name} **"
             `cd ./#{name} && git fetch && cd ..`
             `cd ./#{name} && git fetch --tags && cd ..`
-            latest_tag = `cd ./#{name} && git describe --tags --abbrev=0 && cd ..`.split.first
+            tags = `cd ./#{name} && git tag && cd ..`.split
+
+            ordered_tags = tags.sort do |astr, bstr|
+              a = astr.scan(/\d+/).map(&:to_i)
+              b = bstr.scan(/\d+/).map(&:to_i)
+              a.each_with_index do |e, c|
+                next if e == b[c]
+                break e <=> b[c]
+              end
+            end
+            latest_tag = ordered_tags.last
+
             library_tag = latest_tag
             library_tag = locked_versions[name] if locked_versions.key? name
-
             latest_commit = `cd ./#{name} && git rev-parse #{library_tag || 'HEAD'} && cd ..`.split.first
 
             $stdout.puts "*** #{name} tag: #{latest_tag.inspect}, using: #{library_tag.inspect} commit: #{latest_commit}"
