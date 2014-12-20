@@ -145,6 +145,15 @@
     );
   });
 
+  chai.Assertion.addMethod('descendants', function (selector) {
+    this.assert(
+        flag(this, 'object').has(selector).length > 0
+      , 'expected #{this} to have #{exp}'
+      , 'expected #{this} not to have #{exp}'
+      , selector
+    );
+  });
+
   $.each(['visible', 'hidden', 'selected', 'checked', 'enabled', 'disabled'], function (i, attr) {
     chai.Assertion.addProperty(attr, function () {
       this.assert(
@@ -182,27 +191,6 @@
     };
   });
 
-  chai.Assertion.overwriteProperty('be', function (_super) {
-    return function () {
-      var obj = flag(this, 'object');
-      if (obj instanceof $) {
-        var be = function (selector) {
-          this.assert(
-              obj.is(selector)
-            , 'expected #{this} to be #{exp}'
-            , 'expected #{this} not to be #{exp}'
-            , selector
-          );
-        };
-        setPrototypeOf(be, this);
-        return be;
-      }
-      else {
-        _super.call(this);
-      }
-    }
-  });
-
   chai.Assertion.overwriteMethod('match', function (_super) {
     return function (selector) {
       var obj = flag(this, 'object');
@@ -219,46 +207,25 @@
     }
   });
 
-  chai.Assertion.overwriteProperty('contain', function (_super) {
-    return function () {
-      _super.call(this);
-      var contain = function (text) {
+  chai.Assertion.overwriteChainableMethod('contain',
+    function (_super) {
+      return function (text) {
         var obj = flag(this, 'object');
         if (obj instanceof $) {
           this.assert(
               obj.is(':contains(\'' + text + '\')')
             , 'expected #{this} to contain #{exp}'
             , 'expected #{this} not to contain #{exp}'
-            , text
-          );
+            , text);
         } else {
-          return Function.prototype.apply.call(_super.call(this), this, arguments);
+          _super.apply(this, arguments);
         }
-      };
-      setPrototypeOf(contain, this);
-      return contain;
-    }
-  });
-
-  chai.Assertion.overwriteProperty('have', function (_super) {
-    return function () {
-      var obj = flag(this, 'object');
-      if (obj instanceof $) {
-        var have = function (selector) {
-          this.assert(
-              // Using find() rather than has() to work around a jQuery bug:
-              //   http://bugs.jquery.com/ticket/11706
-              obj.find(selector).length > 0
-            , 'expected #{this} to have #{exp}'
-            , 'expected #{this} not to have #{exp}'
-            , selector
-          );
-        };
-        setPrototypeOf(have, this);
-        return have;
-      } else {
-        _super.call(this);
       }
+    },
+    function(_super) {
+      return function() {
+        _super.call(this);
+      };
     }
-  });
+  );
 }));
