@@ -30,6 +30,11 @@ Example:
     #= require chai-backbone
     #= require chai-jquery
 
+Included versions
+-----------------
+
+See `VERSIONS` for info
+
 Contribution
 ------------
 
