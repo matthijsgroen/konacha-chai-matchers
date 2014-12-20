@@ -4,6 +4,7 @@ Konacha Chai Matchers
 [![Gem Version](https://fury-badge.herokuapp.com/rb/konacha-chai-matchers.png)](http://badge.fury.io/rb/konacha-chai-matchers)
 
 This library contains all [Chai.js plugins](http://chaijs.com/plugins)
+that have browser support.
 
 Not all plugins are tested!
 
