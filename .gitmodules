@@ -61,3 +61,21 @@
 [submodule "chai-change"]
 	path = chai-change
 	url = https://github.com/timruffles/chai-change.git
+[submodule "chai-colors"]
+	path = chai-colors
+	url = git@github.com:hurrymaplelad/chai-colors.git
+[submodule "chai-shallow-deep-equal"]
+	path = chai-shallow-deep-equal
+	url = git@github.com:michelsalib/chai-shallow-deep-equal.git
+[submodule "chai-subset"]
+	path = chai-subset
+	url = git@github.com:e-conomic/chai-subset.git
+[submodule "chai-string"]
+	path = chai-string
+	url = git@github.com:onechiporenko/chai-string.git
+[submodule "chai-param"]
+	path = chai-param
+	url = git@github.com:theblacksmith/chai-param.git
+[submodule "chai-xml"]
+	path = chai-xml
+	url = git@github.com:krampstudio/chai-xml.git
