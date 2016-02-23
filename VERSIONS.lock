@@ -1,2 +1,3 @@
 memo-is: origin/master
 chai-jquery: origin/master
+sinon: v1.17.3
