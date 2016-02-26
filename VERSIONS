@@ -12,7 +12,7 @@ js-factories: 1.1.1
 mocha-as-promised: 2.0.0
 chai-things: 0.2.0
 chai-fuzzy: 1.4.0
-sinon: 1.12.2
+sinon: 1.17.3
 memo-is: 0.0.2
 chai-jq: 0.0.8
 chai-js-factories: 0.1.3
