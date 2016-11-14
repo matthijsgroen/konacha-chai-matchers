@@ -71,9 +71,8 @@ function chaiParam(chai, utils) {
 
     // Overwriting getMessages
     var oldGetMessage = utils.getMessage;
-    utils.getMessage = getMessage;
-
-    function getMessage (obj, args) {
+    
+    utils.getMessage = function getMessage (obj, args) {
 
       if(!chaiParam.config.improveMessages)
       {
