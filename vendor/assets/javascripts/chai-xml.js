@@ -24,12 +24,12 @@ var chaiXmlPlugin = function chaiXmlPlugin(chai, utils){
 
         //flag it as xml
         flag(this, 'xml', true);
-        
+
     });
 
     /**
      * Add the valid method.
-     * Check wheter the XML is well-formed (not validated against DTD, XSD, 
+     * Check whether the XML is well-formed (not validated against DTD, XSD,
      * but it could be implemented in a further version).
      */
     Assertion.addMethod('valid', function (value) {
@@ -38,9 +38,9 @@ var chaiXmlPlugin = function chaiXmlPlugin(chai, utils){
 
         new xml2js.Parser().parseString(this._obj, function(err, result){
             self.assert(
-                err === null, 
-                'expected #{this} to be valid', 
-                'expected #{this} not be not valid', 
+                err === null,
+                'expected #{this} to be valid',
+                'expected #{this} not be not valid',
                 err
             );
         });
@@ -51,13 +51,13 @@ var chaiXmlPlugin = function chaiXmlPlugin(chai, utils){
      * The strings are mapped to objects using xml2js that are deeply compared)
      */
     var compareXml = function(_super){
-         var self = this;
+        var self = this;
         return function assertEqual(value){
             var negate;
             var parser;
             if(flag(this, 'xml')){
                 negate = flag(this, 'negate');
-                parser = new xml2js.Parser();
+                parser = new xml2js.Parser({trim: flag(this, 'deep')});
                 parser.parseString(this._obj, function(err, actual){
                     new Assertion(err).to.be.null;
                     parser.parseString(value, function(err, expected){
@@ -74,10 +74,10 @@ var chaiXmlPlugin = function chaiXmlPlugin(chai, utils){
             }
         };
     };
-   Assertion.overwriteMethod('equal', compareXml); 
-   Assertion.overwriteMethod('equals', compareXml); 
+   Assertion.overwriteMethod('equal', compareXml);
+   Assertion.overwriteMethod('equals', compareXml);
    Assertion.overwriteMethod('eq', compareXml);
- 
+
 };
 
 module.exports = chaiXmlPlugin;

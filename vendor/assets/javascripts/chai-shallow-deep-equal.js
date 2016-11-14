@@ -23,6 +23,25 @@
 }(function (chai, utils) {
 
     function shallowDeepEqual(expect, actual, path) {
+
+        // null value
+        if (expect === null) {
+            if (! (actual === null)) {
+              throw 'Expected "' + actual +'" to be null at path "'+ path +'".';
+            }
+
+            return true;
+        }
+
+        // undefined value
+        if (typeof expect == 'undefined') {
+            if (! (typeof actual == 'undefined')) {
+              throw 'Expected "' + actual +'" to be undefined at path "'+ path +'".';
+            }
+
+            return true;
+        }
+
         // scalar description
         if (/boolean|number|string/.test(typeof expect)) {
             if (expect != actual) {
@@ -33,8 +52,8 @@
         }
 
         // dates
-        if (expect.constructor === Date) {
-            if (actual.constructor == Date) {
+        if (expect instanceof Date) {
+            if (actual instanceof Date) {
                 if (expect.getTime() != actual.getTime()) {
                     throw(
                         'Expected "' + actual.toISOString() + '" to equal ' +
@@ -50,12 +69,12 @@
             }
         }
 
+        if (actual === null) {
+            throw 'Expected null to be an array/object at path "' + path + '".';
+        }
+
         // array/object description
         for (var prop in expect) {
-            if (typeof actual[prop] == 'undefined') {
-                throw 'Cannot find property "' + prop +'" at path "'+ path +'".';
-            }
-
             shallowDeepEqual(expect[prop], actual[prop], path + '/' + prop);
         }
 
