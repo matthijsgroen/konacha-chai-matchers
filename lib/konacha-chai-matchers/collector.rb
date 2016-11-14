@@ -33,14 +33,16 @@ module Konacha
             `cd ./#{name} && git fetch --tags && cd ..`
             tags = `cd ./#{name} && git tag && cd ..`.split
 
-            ordered_tags = tags.sort do |astr, bstr|
+            ordered_tags = tags.select { |t| !t.match(/pre/) }.sort do |astr, bstr|
               a = astr.scan(/\d+/).map(&:to_i)
               b = bstr.scan(/\d+/).map(&:to_i)
+
               a.each_with_index do |e, c|
                 next if e == b[c]
                 break e <=> b[c]
               end
             end
+
             latest_tag = ordered_tags.last
 
             library_tag = latest_tag
